@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Details — [Institute Name]</title>
+  <meta name="description" content="Detailed course information including syllabus, teaching methodology, batch schedule, and faculty details.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header" id="site-header"></header>
+
+  <div class="course-detail__header" id="course-header"></div>
+
+  <div class="container" id="course-body"></div>
+
+  <section class="cta-section" id="cta-section" aria-label="Call to action"></section>
+
+  <section class="section" id="enquiry" aria-label="Enquiry form"></section>
+
+  <footer class="site-footer" id="site-footer"></footer>
+
+  <div class="sticky-mobile-cta" id="sticky-mobile-cta" role="complementary" aria-label="Quick actions"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const courseId = params.get('id');
+      const course = SITE_DATA.courses.find(c => c.id === courseId);
+
+      if (!course) {
+        document.getElementById('course-header').innerHTML = `
+          <div class="container" style="padding:var(--sp-20) 0; text-align:center;">
+            <h1 style="color:var(--c-primary);margin-bottom:var(--sp-4);">Course Not Found</h1>
+            <p style="color:var(--c-text-2);">The requested course could not be found.</p>
+            <a href="index.html#courses" class="btn btn--primary" style="margin-top:var(--sp-6);">View All Courses</a>
+          </div>
+        `;
+        document.getElementById('course-body').style.display = 'none';
+        return;
+      }
+
+      // Update page title
+      document.title = `${course.name} — ${SITE_DATA.institute.name}`;
+
+      const checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+      // Render header
+      document.getElementById('course-header').innerHTML = `
+        <div class="container">
+          <nav class="course-detail__breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="index.html#courses">Courses</a>
+            <span>/</span>
+            <span>${course.name}</span>
+          </nav>
+          <h1 class="course-detail__title">${course.name}</h1>
+          <div class="course-detail__meta">
+            <div class="course-detail__meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              <span>${course.board}</span>
+            </div>
+            <div class="course-detail__meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>${course.duration}</span>
+            </div>
+            <div class="course-detail__meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              <span>${course.classLevel}</span>
+            </div>
+            <div class="course-detail__meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+              <span>${course.mode}</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Render body
+      document.getElementById('course-body').innerHTML = `
+        <div class="course-detail__body">
+          <div class="course-detail__main">
+            <h2>Course Overview</h2>
+            <p>${course.overview}</p>
+
+            <h2>Who Is This Course For?</h2>
+            <p>${course.forWhom}</p>
+
+            <h2>Subjects Covered</h2>
+            <ul>
+              ${course.subjects.map(s => `<li>${checkIcon}<span>${s}</span></li>`).join('')}
+            </ul>
+
+            <h2>Key Features</h2>
+            <ul>
+              ${course.features.map(f => `<li>${checkIcon}<span>${f}</span></li>`).join('')}
+            </ul>
+
+            <h2>Teaching Methodology</h2>
+            <p>Our teaching approach prioritises conceptual clarity. Each topic is introduced through explanation, reinforced with examples, and consolidated through practice problems. Regular doubt-clearing sessions ensure no student is left behind.</p>
+
+            <h2>Tests & Assessments</h2>
+            <p>Students undergo chapter-wise tests, periodic revision assessments, and full-length mock examinations. Detailed performance reports are shared with students and parents to track progress and identify areas for improvement.</p>
+
+            <h2>Study Material</h2>
+            <p>Comprehensive study material is provided as part of the course, including topic-wise notes, solved examples, practice worksheets, and previous year question papers.</p>
+
+            <h2>Doubt Support</h2>
+            <p>Dedicated doubt-resolution sessions are scheduled regularly. Students can also approach faculty members individually for one-on-one clarification.</p>
+          </div>
+
+          <aside class="course-detail__sidebar">
+            <div class="course-detail__sidebar-card">
+              <h3>Course Quick Info</h3>
+              <div class="course-card__meta" style="margin-bottom:var(--sp-6);">
+                <span class="course-card__meta-label">Board</span>
+                <span class="course-card__meta-value">${course.board}</span>
+                <span class="course-card__meta-label">Class</span>
+                <span class="course-card__meta-value">${course.classLevel}</span>
+                <span class="course-card__meta-label">Duration</span>
+                <span class="course-card__meta-value">${course.duration}</span>
+                <span class="course-card__meta-label">Mode</span>
+                <span class="course-card__meta-value">${course.mode}</span>
+                <span class="course-card__meta-label">Batch</span>
+                <span class="course-card__meta-value">${course.batch}</span>
+              </div>
+              <a href="index.html#enquiry" class="btn btn--primary btn--block" style="margin-bottom:var(--sp-3);">Enquire About This Course</a>
+              <a href="tel:${SITE_DATA.contact.phone[0]}" class="btn btn--secondary btn--block">Call the Institute</a>
+            </div>
+          </aside>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
